@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <title></title>
+   </head>
+   <body>
+      <div class="container-fluid" style="padding-left: 10px">
+         <h2 id="hdr"></h2>
+         <form id="myForm" class="form-inline form-search" name="myForm">
+            <label>Pesquisa Por: 
+            <input id="in" type="text" ng-model="searchTerm" class="search-query input-medium" placeholder="O que voê procura?"/>
+            </label> 
+            <label>
+               Ordenar Por: 
+               <select id="option" ng-model="orderProp">
+                  <option value="volumeInfo.authors">Autor</option>
+                  <option selected="selected" value="volumeInfo.title">Título</option>
+               </select>
+            </label>
+            <button class="btn btn-primary" ng-click="bookSearch()"> Pesquisar</button>
+         </form>
+         <table id="resultsTbl" class="table table-striped">
+            <thead>
+               <tr>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr dir-paginate="item in bookResults| filter:SubQuery | orderBy:orderProp | itemsPerPage:5">
+                  <td><a ng-href="{{item.volumeInfo.infoLink}}" target="_blank"><img ng-src=
+                     "{{item.volumeInfo.imageLinks.smallThumbnail}}" /></a></td>
+                  <td>{{item.volumeInfo.title}}<br />
+                     Autor: {{item.volumeInfo.authors | formatFilter}}<br />
+                     Publicado: {{item.volumeInfo.publisher}}, {{item.volumeInfo.publishedDate |
+                     dateFilter}}
+                  </td>
+                   <td><input type="checkbox" ng-model="myVar" ng-click="updateStorage()">Favorito - {{myVar }}</td>
+                   <td><button type="button"  ng-click="open()" class="btn btn-info" data-toggle="modal" data-target="#myModal">Ver Detalhes</button>
+                    <!-- Modal -->
+                        <div id="myModal" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close"  ng-click="cancel()" modal="showModal" data-dismiss="modal"></button>
+                                <h4 class="modal-title">{{item.volumeInfo.title}}</h4>
+                              </div>
+                              <div class="modal-body">
+                                <img ng-src=
+                     "{{item.volumeInfo.imageLinks.smallThumbnail}}" /><p>{{item.volumeInfo.description}}.</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Close</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>   
+                   </td>
+               </tr>
+               
+            </tbody>
+         </table>
+      </div>
+        <dir-pagination-controls max-size="5" boundary-links="true"></dir-pagination-controls>
+   </body>
+</html>
